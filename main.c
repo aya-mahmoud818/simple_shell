@@ -5,7 +5,7 @@
  * Return: 0
  */
 
-int main(void)
+int main(int argc, char **strings)
 {
 	char *prompt = "simpleshell $";
 	char *lineptr = NULL, *lineptr_copy = NULL;
@@ -13,30 +13,32 @@ int main(void)
 	ssize_t num_chars;
 	char *token;
 	const char *delim = " \n";
-	char **strings;
-	int i = 0;
-	int num_tokens = 0;
+	int i, num_tokens = 0;
 
-	printf("%s", prompt);
-	num_chars = getline(&lineptr, &size, stdin);
-	lineptr_copy = malloc(sizeof(char) * num_chars);
+	(void)argc;
 
-	if (lineptr_copy == NULL)
+	while (1)
 	{
-		perror("tsh: memory allocation error");
-		return (-1);
-	}
+		printf("%s", prompt);
+		num_chars = getline(&lineptr, &size, stdin);
 
-	strcpy(lineptr_copy, lineptr);
+		if (num_chars == -1)
+		{
+			printf("Exit\n");
+			return (-1);
+		}
 
-	if (num_chars == -1)
-	{
-		printf("Exit\n");
-		return (-1);
-	}
-	else
-	{
+		lineptr_copy = malloc(sizeof(char) * num_chars);
+
+		if (lineptr_copy == NULL)
+		{
+			perror("tsh: memory allocation error");
+			return (-1);
+		}
+
+		strcpy(lineptr_copy, lineptr);
 		token = strtok(lineptr, delim);
+
 		while (token != NULL)
 		{
 			num_tokens++;
@@ -58,10 +60,11 @@ int main(void)
 
 		strings[i] = NULL;
 
-		free(strings);
+		excute(strings);
+	}
+
 		free(lineptr);
 		free(lineptr_copy);
-	}
 
 	return (0);
 }
