@@ -6,5 +6,6 @@
 #include <string.h>
 
 void excute(char **strings);
+char *select_loc(char *command);
 
 #endif
