@@ -2,13 +2,14 @@
 
 void excute(char **strings)
 {
-	char *command = NULL;
+	char *command = NULL, *main_command = NULL;
 
 	if (strings)
 	{
 		command = strings[0];
+		main_command = select_loc(command);
 
-		if (execve(command, strings, NULL) == -1)
+		if (execve(main_command, strings, NULL) == -1)
 		{
 			perror("error:");
 		}
